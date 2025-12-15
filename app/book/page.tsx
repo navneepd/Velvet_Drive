@@ -1,6 +1,6 @@
 import { Suspense } from "react";
 import { Navbar } from "@/components/layout/Navbar";
-import { BookingFormContent } from "@/components/booking/BookingFormContent";
+import { BookingForm } from "@/components/booking/BookingForm";
 
 function BookingLoadingFallback() {
     return (
@@ -20,7 +20,7 @@ export default function BookPage() {
         <main className="min-h-screen bg-background text-foreground">
             <Navbar />
             <Suspense fallback={<BookingLoadingFallback />}>
-                <BookingFormContent />
+                <BookingForm />
             </Suspense>
         </main>
     );
