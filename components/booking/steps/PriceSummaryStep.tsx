@@ -2,25 +2,26 @@
 
 import { BookingData } from "../BookingForm";
 import { Check, Info } from "lucide-react";
+import { formatCurrency } from "@/lib/utils";
 
 interface PriceSummaryStepProps {
     data: BookingData;
 }
 
-const VEHICLE_INFO: Record<string, { name: string; price: string; features: string[] }> = {
+const VEHICLE_INFO: Record<string, { name: string; price: number; features: string[] }> = {
     business: {
         name: "Business Class",
-        price: "$150",
+        price: 12000,
         features: ["Mercedes E-Class", "2 Bags", "Free Cancellation"]
     },
     first: {
         name: "First Class",
-        price: "$220",
+        price: 18000,
         features: ["Mercedes S-Class", "3 Bags", "Concierge Service"]
     },
     van: {
         name: "V-Class",
-        price: "$280",
+        price: 22000,
         features: ["Mercedes V-Class", "5 Bags", "Group Travel"]
     },
 };
@@ -40,7 +41,7 @@ export function PriceSummaryStep({ data }: PriceSummaryStepProps) {
                     <div className="flex justify-between items-end">
                         <div className="text-left">
                             <p className="text-sm font-semibold text-primary uppercase tracking-wider mb-1">Total Estimate</p>
-                            <h3 className="text-4xl font-bold text-foreground">{info.price}</h3>
+                            <h3 className="text-4xl font-bold text-foreground">{formatCurrency(info.price)}</h3>
                             <p className="text-xs text-muted-foreground mt-1">All taxes and fees included</p>
                         </div>
                         <div className="text-right">

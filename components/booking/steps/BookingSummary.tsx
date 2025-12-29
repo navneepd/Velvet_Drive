@@ -2,15 +2,16 @@
 
 import { BookingData } from "../BookingWizard";
 import { CheckCircle } from "lucide-react";
+import { formatCurrency } from "@/lib/utils";
 
 interface BookingSummaryProps {
     data: BookingData;
 }
 
-const VEHICLE_INFO: Record<string, { name: string; price: string }> = {
-    business: { name: "Business Class (Mercedes E-Class)", price: "$150" },
-    first: { name: "First Class (Mercedes S-Class)", price: "$220" },
-    van: { name: "V-Class (Mercedes V-Class)", price: "$280" },
+const VEHICLE_INFO: Record<string, { name: string; price: number }> = {
+    business: { name: "Business Class (Mercedes E-Class)", price: 12000 },
+    first: { name: "First Class (Mercedes S-Class)", price: 18000 },
+    van: { name: "V-Class (Mercedes V-Class)", price: 22000 },
 };
 
 export function BookingSummary({ data }: BookingSummaryProps) {
@@ -110,7 +111,7 @@ export function BookingSummary({ data }: BookingSummaryProps) {
                         Estimated Cost
                     </span>
                     <span className="text-3xl font-bold text-primary">
-                        {vehicleInfo.price}
+                        {formatCurrency(vehicleInfo.price)}
                     </span>
                 </div>
                 <p className="text-xs text-muted-foreground">

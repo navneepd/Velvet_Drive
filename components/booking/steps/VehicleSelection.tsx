@@ -2,6 +2,7 @@
 
 import { Check } from "lucide-react";
 import { BookingData } from "../BookingWizard";
+import { formatCurrency } from "@/lib/utils";
 
 interface VehicleSelectionProps {
     data: BookingData;
@@ -14,7 +15,7 @@ const VEHICLES = [
         name: "Business Class",
         model: "Mercedes E-Class",
         description: "Executive travel for up to 4 passengers",
-        price: "$150",
+        price: 12000,
         icon: "🚗",
         features: ["4 Passengers", "Premium Comfort", "Climate Control"],
     },
@@ -23,7 +24,7 @@ const VEHICLES = [
         name: "First Class",
         model: "Mercedes S-Class",
         description: "Ultimate luxury experience",
-        price: "$220",
+        price: 18000,
         icon: "👑",
         features: ["4 Passengers", "Maximum Elegance", "Premium Audio"],
     },
@@ -32,7 +33,7 @@ const VEHICLES = [
         name: "V-Class",
         model: "Mercedes V-Class",
         description: "Perfect for groups and large parties",
-        price: "$280",
+        price: 22000,
         icon: "🚐",
         features: ["6-7 Passengers", "Spacious Interior", "Comfortable Seating"],
     },
@@ -53,11 +54,10 @@ export function VehicleSelection({ data, onUpdate }: VehicleSelectionProps) {
                     <button
                         key={vehicle.id}
                         onClick={() => onUpdate({ selectedVehicle: vehicle.id })}
-                        className={`w-full p-6 rounded-xl border-2 transition-all text-left ${
-                            data.selectedVehicle === vehicle.id
-                                ? "border-primary bg-primary/5"
-                                : "border-border bg-background hover:border-primary/50"
-                        }`}
+                        className={`w-full p-6 rounded-xl border-2 transition-all text-left ${data.selectedVehicle === vehicle.id
+                            ? "border-primary bg-primary/5"
+                            : "border-border bg-background hover:border-primary/50"
+                            }`}
                     >
                         <div className="flex items-start justify-between mb-4">
                             <div className="flex items-start gap-4">
@@ -77,7 +77,7 @@ export function VehicleSelection({ data, onUpdate }: VehicleSelectionProps) {
 
                             <div className="text-right">
                                 <div className="text-2xl font-bold text-primary mb-2">
-                                    {vehicle.price}
+                                    {formatCurrency(vehicle.price)}
                                 </div>
                                 {data.selectedVehicle === vehicle.id && (
                                     <div className="w-6 h-6 rounded-full bg-primary flex items-center justify-center">

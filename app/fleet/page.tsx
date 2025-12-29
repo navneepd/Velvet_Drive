@@ -11,7 +11,7 @@ const vehicles = [
         description: "Executive travel for up to 4 passengers",
         longDescription: "Perfect for business travelers and professionals. The Mercedes E-Class offers premium comfort with state-of-the-art climate control, premium audio systems, and complimentary Wi-Fi connectivity.",
         specs: ["4 Passengers", "Premium Comfort", "Climate Control", "Premium Audio", "Wi-Fi Connectivity", "Complimentary Beverages"],
-        price: "$150 - $200",
+        price: "₹12,000 - ₹16,000",
         icon: "🚗",
     },
     {
@@ -21,7 +21,7 @@ const vehicles = [
         description: "Ultimate luxury experience for up to 4 passengers",
         longDescription: "Our flagship vehicle. The Mercedes S-Class is the pinnacle of automotive luxury. Featuring hand-stitched leather interiors, panoramic sunroofs, heated massage seats, and the finest in-cabin technology.",
         specs: ["4 Passengers", "Maximum Elegance", "Premium Audio System", "Heated Massage Seats", "Panoramic Sunroof", "Champagne Service"],
-        price: "$220 - $300",
+        price: "₹18,000 - ₹25,000",
         icon: "👑",
     },
     {
@@ -31,7 +31,7 @@ const vehicles = [
         description: "Perfect for groups and large parties",
         longDescription: "Ideal for group travel, corporate events, and family outings. The Mercedes V-Class accommodates 6-7 passengers with spacious interiors, individual climate zones, and premium seating arrangements.",
         specs: ["6-7 Passengers", "Spacious Interior", "Individual Climate Zones", "Premium Seating", "Luggage Space", "Flexible Configurations"],
-        price: "$280 - $350",
+        price: "₹22,000 - ₹28,000",
         icon: "🚐",
     },
 ];
