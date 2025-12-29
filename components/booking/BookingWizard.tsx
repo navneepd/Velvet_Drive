@@ -34,7 +34,7 @@ const INITIAL_BOOKING_DATA: BookingData = {
     date: "",
     time: "",
     flightNumber: "",
-    selectedVehicle: "business",
+    selectedVehicle: "executive",
     passengerName: "",
     passengerEmail: "",
     passengerPhone: "",
@@ -103,11 +103,10 @@ export function BookingWizard() {
                     {[1, 2, 3, 4].map((step) => (
                         <div key={step} className="flex-1">
                             <div
-                                className={`h-2 rounded-full transition-all duration-300 ${
-                                    step <= currentStep
+                                className={`h-2 rounded-full transition-all duration-300 ${step <= currentStep
                                         ? "bg-primary"
                                         : "bg-border"
-                                }`}
+                                    }`}
                             />
                         </div>
                     ))}

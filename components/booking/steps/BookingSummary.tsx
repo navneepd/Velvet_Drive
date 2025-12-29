@@ -9,14 +9,16 @@ interface BookingSummaryProps {
 }
 
 const VEHICLE_INFO: Record<string, { name: string; price: number }> = {
-    business: { name: "Business Class (Mercedes E-Class)", price: 12000 },
-    first: { name: "First Class (Mercedes S-Class)", price: 18000 },
-    van: { name: "V-Class (Mercedes V-Class)", price: 22000 },
+    executive: { name: "Executive Sedan (Toyota Camry)", price: 3500 },
+    luxury: { name: "Luxury Sedan (Mercedes E-Class LWB)", price: 6500 },
+    first: { name: "First Class (Mercedes S-Class)", price: 15000 },
+    suv: { name: "Premium SUV (Audi Q7)", price: 9500 },
+    mpv: { name: "Luxury MPV (Toyota Vellfire)", price: 12000 },
 };
 
 export function BookingSummary({ data }: BookingSummaryProps) {
     const vehicleInfo =
-        VEHICLE_INFO[data.selectedVehicle || "business"];
+        VEHICLE_INFO[data.selectedVehicle || "executive"];
 
     return (
         <div>

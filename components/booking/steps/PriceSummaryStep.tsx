@@ -9,25 +9,35 @@ interface PriceSummaryStepProps {
 }
 
 const VEHICLE_INFO: Record<string, { name: string; price: number; features: string[] }> = {
-    business: {
-        name: "Business Class",
-        price: 12000,
-        features: ["Mercedes E-Class", "2 Bags", "Free Cancellation"]
+    executive: {
+        name: "Executive Sedan",
+        price: 3500,
+        features: ["Toyota Camry Hybrid", "2 Bags", "Silent Ride"]
+    },
+    luxury: {
+        name: "Luxury Sedan",
+        price: 6500,
+        features: ["Mercedes E-Class LWB", "3 Bags", "Extra Legroom"]
     },
     first: {
         name: "First Class",
-        price: 18000,
-        features: ["Mercedes S-Class", "3 Bags", "Concierge Service"]
+        price: 15000,
+        features: ["Mercedes S-Class", "3 Bags", "Massage Seats"]
     },
-    van: {
-        name: "V-Class",
-        price: 22000,
-        features: ["Mercedes V-Class", "5 Bags", "Group Travel"]
+    suv: {
+        name: "Premium SUV",
+        price: 9500,
+        features: ["Audi Q7 / BMW X7", "4 Bags", "Panoramic View"]
+    },
+    mpv: {
+        name: "Luxury MPV",
+        price: 12000,
+        features: ["Toyota Vellfire", "6 Bags", "Reclining Seats"]
     },
 };
 
 export function PriceSummaryStep({ data }: PriceSummaryStepProps) {
-    const info = VEHICLE_INFO[data.selectedVehicle || "business"];
+    const info = VEHICLE_INFO[data.selectedVehicle || "executive"];
 
     return (
         <div className="space-y-8 animate-in fade-in slide-in-from-right-8 duration-500">
