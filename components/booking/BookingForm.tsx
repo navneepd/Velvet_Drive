@@ -2,26 +2,25 @@
 
 import { useState, useEffect } from "react";
 import { useSearchParams } from "next/navigation";
-import { ChevronRight, ChevronLeft } from "lucide-react";
+import { ChevronRight, ChevronLeft, Check } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { RideDetails } from "./steps/RideDetails";
+
+// New Steps
+import { PickupStep } from "./steps/PickupStep";
+import { DropStep } from "./steps/DropStep";
+import { DateTimeStep } from "./steps/DateTimeStep";
 import { VehicleSelection } from "./steps/VehicleSelection";
-import { PassengerInfo } from "./steps/PassengerInfo";
-import { BookingSummary } from "./steps/BookingSummary";
+import { PriceSummaryStep } from "./steps/PriceSummaryStep";
+import { ConfirmationStep } from "./steps/ConfirmationStep";
 
 export interface BookingData {
-    // Ride Details
     rideType: "one-way" | "hourly";
     pickupLocation: string;
     dropoffLocation: string;
     date: string;
     time: string;
     flightNumber?: string;
-
-    // Vehicle Selection
     selectedVehicle?: string;
-
-    // Passenger Info
     passengerName: string;
     passengerEmail: string;
     passengerPhone: string;
@@ -40,12 +39,14 @@ const INITIAL_BOOKING_DATA: BookingData = {
     passengerPhone: "",
 };
 
+const TOTAL_STEPS = 6;
+
 export function BookingForm() {
     const searchParams = useSearchParams();
     const [currentStep, setCurrentStep] = useState(1);
     const [bookingData, setBookingData] = useState<BookingData>(INITIAL_BOOKING_DATA);
+    const [isSubmitting, setIsSubmitting] = useState(false);
 
-    // Pre-fill form with query parameters from Hero widget
     useEffect(() => {
         const pickup = searchParams.get("pickup");
         const dropoff = searchParams.get("dropoff");
@@ -66,7 +67,7 @@ export function BookingForm() {
     };
 
     const handleNext = () => {
-        if (currentStep < 4) {
+        if (currentStep < TOTAL_STEPS) {
             setCurrentStep(currentStep + 1);
             window.scrollTo({ top: 0, behavior: "smooth" });
         }
@@ -79,101 +80,114 @@ export function BookingForm() {
         }
     };
 
-    const handleSubmit = () => {
+    const handleSubmit = async () => {
+        setIsSubmitting(true);
+        // Simulate API call
+        await new Promise(resolve => setTimeout(resolve, 1500));
         console.log("Booking Submitted:", bookingData);
-        alert("Booking confirmed! Check console for details.");
-        // In a real app, send this to your backend
+        alert("Booking Confirmed! An email has been sent to " + bookingData.passengerEmail);
+        setIsSubmitting(false);
+    };
+
+    // Validation Logic for Navigation
+    const canProceed = () => {
+        switch (currentStep) {
+            case 1: return bookingData.pickupLocation.length > 3;
+            case 2: return bookingData.dropoffLocation.length > 3;
+            case 3: return bookingData.date && bookingData.time;
+            case 4: return !!bookingData.selectedVehicle;
+            case 5: return true; // Review step
+            case 6: return bookingData.passengerName && bookingData.passengerEmail && bookingData.passengerPhone;
+            default: return false;
+        }
     };
 
     return (
         <section className="py-20 px-4 bg-secondary/10 min-h-screen">
             <div className="container mx-auto max-w-2xl">
                 {/* Header */}
-                <div className="mb-12 text-center">
-                    <h1 className="text-4xl md:text-5xl font-serif font-bold text-foreground mb-4">
+                <div className="mb-8 text-center">
+                    <h1 className="text-3xl md:text-4xl font-serif font-bold text-foreground mb-2">
                         Book Your <span className="text-primary">Journey</span>
                     </h1>
-                    <p className="text-lg text-muted-foreground">
-                        Step {currentStep} of 4
-                    </p>
+                    <div className="flex items-center justify-center gap-2 text-sm text-muted-foreground">
+                        <span className={currentStep >= 1 ? "text-primary font-medium" : ""}>Route</span>
+                        <ChevronRight className="w-3 h-3" />
+                        <span className={currentStep >= 4 ? "text-primary font-medium" : ""}>Vehicle</span>
+                        <ChevronRight className="w-3 h-3" />
+                        <span className={currentStep === 6 ? "text-primary font-medium" : ""}>Confirm</span>
+                    </div>
                 </div>
 
                 {/* Progress Bar */}
-                <div className="mb-12 flex gap-2">
-                    {[1, 2, 3, 4].map((step) => (
-                        <div key={step} className="flex-1">
+                <div className="mb-10">
+                    <div className="flex gap-1 h-1.5 w-full bg-border/30 rounded-full overflow-hidden">
+                        {[...Array(TOTAL_STEPS)].map((_, i) => (
                             <div
-                                className={`h-2 rounded-full transition-all duration-300 ${
-                                    step <= currentStep
-                                        ? "bg-primary"
-                                        : "bg-border"
-                                }`}
+                                key={i}
+                                className={`flex-1 transition-all duration-500 ${i + 1 <= currentStep ? "bg-primary" : "bg-transparent"
+                                    }`}
                             />
-                        </div>
-                    ))}
+                        ))}
+                    </div>
+                    <div className="flex justify-between mt-2 text-xs text-muted-foreground">
+                        <span>Step {currentStep} of {TOTAL_STEPS}</span>
+                        <span>{Math.round((currentStep / TOTAL_STEPS) * 100)}% Complete</span>
+                    </div>
                 </div>
 
                 {/* Step Content */}
-                <div className="bg-card rounded-2xl border border-border/50 p-8 md:p-12 shadow-lg">
-                    {currentStep === 1 && (
-                        <RideDetails
-                            data={bookingData}
-                            onUpdate={updateBookingData}
-                        />
-                    )}
-
-                    {currentStep === 2 && (
-                        <VehicleSelection
-                            data={bookingData}
-                            onUpdate={updateBookingData}
-                        />
-                    )}
-
-                    {currentStep === 3 && (
-                        <PassengerInfo
-                            data={bookingData}
-                            onUpdate={updateBookingData}
-                        />
-                    )}
-
-                    {currentStep === 4 && (
-                        <BookingSummary data={bookingData} />
-                    )}
+                <div className="bg-card rounded-2xl border border-border/50 p-6 md:p-10 shadow-xl min-h-[400px] flex flex-col justify-between">
+                    <div className="mb-8">
+                        {currentStep === 1 && <PickupStep data={bookingData} onUpdate={updateBookingData} />}
+                        {currentStep === 2 && <DropStep data={bookingData} onUpdate={updateBookingData} />}
+                        {currentStep === 3 && <DateTimeStep data={bookingData} onUpdate={updateBookingData} />}
+                        {currentStep === 4 && <VehicleSelection data={bookingData} onUpdate={updateBookingData} />}
+                        {currentStep === 5 && <PriceSummaryStep data={bookingData} />}
+                        {currentStep === 6 && <ConfirmationStep data={bookingData} onUpdate={updateBookingData} />}
+                    </div>
 
                     {/* Navigation Buttons */}
-                    <div className="mt-12 flex gap-4 justify-between">
+                    <div className="flex gap-4 justify-between pt-6 border-t border-border/30">
                         <Button
                             onClick={handlePrevious}
-                            disabled={currentStep === 1}
+                            disabled={currentStep === 1 || isSubmitting}
                             variant="outline"
                             className="flex items-center gap-2"
                         >
                             <ChevronLeft className="w-4 h-4" />
-                            Previous
+                            Back
                         </Button>
 
-                        {currentStep < 4 ? (
+                        {currentStep < TOTAL_STEPS ? (
                             <Button
                                 onClick={handleNext}
-                                className="bg-primary text-primary-foreground hover:bg-primary/90 flex items-center gap-2"
+                                disabled={!canProceed()}
+                                className="bg-primary text-primary-foreground hover:bg-primary/90 flex items-center gap-2 px-8 shadow-md hover:shadow-lg transition-all"
                             >
-                                Next
+                                Next Step
                                 <ChevronRight className="w-4 h-4" />
                             </Button>
                         ) : (
                             <Button
                                 onClick={handleSubmit}
-                                className="bg-primary text-primary-foreground hover:bg-primary/90 px-8 text-lg"
+                                disabled={!canProceed() || isSubmitting}
+                                className="bg-primary text-primary-foreground hover:bg-primary/90 px-8 text-lg w-full md:w-auto shadow-xl hover:shadow-2xl transition-all"
                             >
-                                Confirm Booking
+                                {isSubmitting ? "Confirming..." : "Confirm Booking"}
                             </Button>
                         )}
                     </div>
                 </div>
 
-                {/* Booking Info */}
-                <div className="mt-8 text-center text-sm text-muted-foreground">
-                    <p>💬 Need help? Contact our team at +1 (555) 123-4567</p>
+                {/* Trust Footer */}
+                <div className="mt-8 text-center flex flex-col items-center gap-3">
+                    <p className="text-sm text-muted-foreground">
+                        🔒 SSL Secured Transaction • 24/7 Customer Support
+                    </p>
+                    <div className="text-xs text-muted-foreground/60">
+                        Need assistance? Call our concierge at +44 20 7123 4567
+                    </div>
                 </div>
             </div>
         </section>

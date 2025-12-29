@@ -46,7 +46,12 @@ export function BookingCTA() {
                         <div className="hidden md:block w-px h-8 bg-border/50"></div>
                         <div className="flex flex-col items-center gap-2">
                             <div className="text-2xl font-bold text-primary">5★</div>
-                            <p>Avg. Rating</p>
+                            <p>Excellence</p>
+                        </div>
+                        <div className="hidden md:block w-px h-8 bg-border/50"></div>
+                        <div className="flex flex-col items-center gap-2">
+                            <div className="text-2xl font-bold text-primary">100%</div>
+                            <p>Verified Fleet</p>
                         </div>
                     </div>
                 </div>

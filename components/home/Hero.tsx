@@ -42,11 +42,11 @@ export function Hero() {
             {/* Content */}
             <div className="relative z-10 container px-4 text-center">
                 <h1 className="text-4xl md:text-6xl lg:text-7xl font-serif font-bold text-foreground mb-6 leading-tight animate-in fade-in slide-in-from-bottom-4 duration-1000">
-                    Chauffeur Services <br /> <span className="text-primary">Redefined</span>
+                    The Standard in <br /> <span className="text-primary">Executive Travel</span>
                 </h1>
                 <p className="text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto mb-10 animate-in fade-in slide-in-from-bottom-5 duration-1000 delay-200">
-                    Experience the ultimate in luxury travel. Professional chauffeurs,
-                    premium fleet, and seamless booking for your business and leisure needs.
+                    Impeccable service, verified chauffeured fleet, and absolute discretion.
+                    The preferred choice for corporate leaders and discerning travellers.
                 </p>
 
                 {/* Booking Widget */}
@@ -101,8 +101,13 @@ export function Hero() {
                             SEARCH
                         </Button>
                     </div>
+                    <div className="mt-4 flex items-center justify-center gap-6 text-xs text-muted-foreground/80">
+                        <span className="flex items-center gap-1">✓ Professional Chauffeurs</span>
+                        <span className="flex items-center gap-1">✓ Flight Tracking</span>
+                        <span className="flex items-center gap-1">✓ All-Inclusive Rates</span>
+                    </div>
                 </div>
             </div>
-        </section>
+        </section >
     );
 }
