@@ -94,6 +94,27 @@ export function BookingForm() {
         setBookingRef(ref);
         setIsSuccess(true);
         setIsSubmitting(false);
+
+        // Save to local storage for Agency Dashboard (Pilot)
+        const newBooking = {
+            id: ref,
+            date: bookingData.date,
+            time: bookingData.time,
+            pickup: bookingData.pickupLocation,
+            drop: bookingData.dropoffLocation,
+            vehicle: bookingData.selectedVehicle?.replace(/-/g, " ") || "Exec",
+            status: "Pending",
+            agentRef: bookingData.agentReference || "",
+            source: "live"
+        };
+
+        try {
+            const existing = JSON.parse(localStorage.getItem("vd_bookings") || "[]");
+            localStorage.setItem("vd_bookings", JSON.stringify([newBooking, ...existing]));
+        } catch (e) {
+            console.error("Failed to save booking locally", e);
+        }
+
         window.scrollTo({ top: 0, behavior: "smooth" });
     };
 
