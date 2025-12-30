@@ -23,6 +23,8 @@ export function ConfirmationStep({ data, onUpdate }: ConfirmationStepProps) {
                 <h3 className="text-sm font-semibold mb-3 text-foreground">Agency / Corporate Reference</h3>
                 <input
                     type="text"
+                    value={data.agentReference || ""}
+                    onChange={(e) => onUpdate({ agentReference: e.target.value })}
                     placeholder="Enter Agent Code or PO Number (Optional)"
                     className="w-full px-4 py-3 rounded-lg border border-input bg-background/50 focus:ring-2 focus:ring-primary/20 transition-all text-sm"
                 />

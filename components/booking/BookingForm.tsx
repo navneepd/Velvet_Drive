@@ -12,6 +12,7 @@ import { DateTimeStep } from "./steps/DateTimeStep";
 import { VehicleSelection } from "./steps/VehicleSelection";
 import { PriceSummaryStep } from "./steps/PriceSummaryStep";
 import { ConfirmationStep } from "./steps/ConfirmationStep";
+import { SuccessConfirmation } from "./SuccessConfirmation";
 
 export interface BookingData {
     rideType: "one-way" | "hourly";
@@ -24,6 +25,7 @@ export interface BookingData {
     passengerName: string;
     passengerEmail: string;
     passengerPhone: string;
+    agentReference?: string;
 }
 
 const INITIAL_BOOKING_DATA: BookingData = {
@@ -46,6 +48,8 @@ export function BookingForm() {
     const [currentStep, setCurrentStep] = useState(1);
     const [bookingData, setBookingData] = useState<BookingData>(INITIAL_BOOKING_DATA);
     const [isSubmitting, setIsSubmitting] = useState(false);
+    const [isSuccess, setIsSuccess] = useState(false);
+    const [bookingRef, setBookingRef] = useState("");
 
     useEffect(() => {
         const pickup = searchParams.get("pickup");
@@ -84,9 +88,21 @@ export function BookingForm() {
         setIsSubmitting(true);
         // Simulate API call
         await new Promise(resolve => setTimeout(resolve, 1500));
-        console.log("Booking Submitted:", bookingData);
-        alert("Booking Confirmed! An email has been sent to " + bookingData.passengerEmail);
+
+        // Generate random reference
+        const ref = "VD-" + Math.random().toString(36).substr(2, 6).toUpperCase();
+        setBookingRef(ref);
+        setIsSuccess(true);
         setIsSubmitting(false);
+        window.scrollTo({ top: 0, behavior: "smooth" });
+    };
+
+    const handleReset = () => {
+        setBookingData(INITIAL_BOOKING_DATA);
+        setCurrentStep(1);
+        setIsSuccess(false);
+        setBookingRef("");
+        window.scrollTo({ top: 0, behavior: "smooth" });
     };
 
     // Validation Logic for Navigation
@@ -138,46 +154,56 @@ export function BookingForm() {
 
                 {/* Step Content */}
                 <div className="bg-card rounded-2xl border border-border/50 p-6 md:p-10 shadow-xl min-h-[400px] flex flex-col justify-between">
-                    <div className="mb-8">
-                        {currentStep === 1 && <PickupStep data={bookingData} onUpdate={updateBookingData} />}
-                        {currentStep === 2 && <DropStep data={bookingData} onUpdate={updateBookingData} />}
-                        {currentStep === 3 && <DateTimeStep data={bookingData} onUpdate={updateBookingData} />}
-                        {currentStep === 4 && <VehicleSelection data={bookingData} onUpdate={updateBookingData} />}
-                        {currentStep === 5 && <PriceSummaryStep data={bookingData} />}
-                        {currentStep === 6 && <ConfirmationStep data={bookingData} onUpdate={updateBookingData} />}
-                    </div>
+                    {isSuccess ? (
+                        <SuccessConfirmation
+                            bookingRef={bookingRef}
+                            data={bookingData}
+                            onReset={handleReset}
+                        />
+                    ) : (
+                        <>
+                            <div className="mb-8">
+                                {currentStep === 1 && <PickupStep data={bookingData} onUpdate={updateBookingData} />}
+                                {currentStep === 2 && <DropStep data={bookingData} onUpdate={updateBookingData} />}
+                                {currentStep === 3 && <DateTimeStep data={bookingData} onUpdate={updateBookingData} />}
+                                {currentStep === 4 && <VehicleSelection data={bookingData} onUpdate={updateBookingData} />}
+                                {currentStep === 5 && <PriceSummaryStep data={bookingData} />}
+                                {currentStep === 6 && <ConfirmationStep data={bookingData} onUpdate={updateBookingData} />}
+                            </div>
 
-                    {/* Navigation Buttons */}
-                    <div className="flex gap-4 justify-between pt-6 border-t border-border/30">
-                        <Button
-                            onClick={handlePrevious}
-                            disabled={currentStep === 1 || isSubmitting}
-                            variant="outline"
-                            className="flex items-center gap-2"
-                        >
-                            <ChevronLeft className="w-4 h-4" />
-                            Back
-                        </Button>
+                            {/* Navigation Buttons */}
+                            <div className="flex gap-4 justify-between pt-6 border-t border-border/30">
+                                <Button
+                                    onClick={handlePrevious}
+                                    disabled={currentStep === 1 || isSubmitting}
+                                    variant="outline"
+                                    className="flex items-center gap-2"
+                                >
+                                    <ChevronLeft className="w-4 h-4" />
+                                    Back
+                                </Button>
 
-                        {currentStep < TOTAL_STEPS ? (
-                            <Button
-                                onClick={handleNext}
-                                disabled={!canProceed()}
-                                className="bg-primary text-primary-foreground hover:bg-primary/90 flex items-center gap-2 px-8 shadow-md hover:shadow-lg transition-all"
-                            >
-                                Next Step
-                                <ChevronRight className="w-4 h-4" />
-                            </Button>
-                        ) : (
-                            <Button
-                                onClick={handleSubmit}
-                                disabled={!canProceed() || isSubmitting}
-                                className="bg-primary text-primary-foreground hover:bg-primary/90 px-8 text-lg w-full md:w-auto shadow-xl hover:shadow-2xl transition-all"
-                            >
-                                {isSubmitting ? "Confirming..." : "Confirm Booking"}
-                            </Button>
-                        )}
-                    </div>
+                                {currentStep < TOTAL_STEPS ? (
+                                    <Button
+                                        onClick={handleNext}
+                                        disabled={!canProceed()}
+                                        className="bg-primary text-primary-foreground hover:bg-primary/90 flex items-center gap-2 px-8 shadow-md hover:shadow-lg transition-all"
+                                    >
+                                        Next Step
+                                        <ChevronRight className="w-4 h-4" />
+                                    </Button>
+                                ) : (
+                                    <Button
+                                        onClick={handleSubmit}
+                                        disabled={!canProceed() || isSubmitting}
+                                        className="bg-primary text-primary-foreground hover:bg-primary/90 px-8 text-lg w-full md:w-auto shadow-xl hover:shadow-2xl transition-all"
+                                    >
+                                        {isSubmitting ? "Confirming..." : "Confirm Booking"}
+                                    </Button>
+                                )}
+                            </div>
+                        </>
+                    )}
                 </div>
 
                 {/* Trust Footer */}
