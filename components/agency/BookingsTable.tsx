@@ -4,25 +4,40 @@ import { useMemo, useState } from "react";
 import { Search, Filter, CheckCircle, Clock } from "lucide-react";
 import { Input } from "@/components/ui/input";
 
-// Minimal mock data for demonstration
+// Minimal mock data for demonstration (Assam/Guwahati Pilot)
 const MOCK_BOOKINGS = [
-    { id: "VD-X7K2P9", date: "2025-01-15", time: "10:30", pickup: "Heathrow T5", drop: "The Savoy", vehicle: "Executive Sedan", status: "Confirmed", agentRef: "AGENT001" },
-    { id: "VD-9H2L5M", date: "2025-01-16", time: "14:00", pickup: "Gatwick North", drop: "Canary Wharf", vehicle: "Luxury MPV", status: "Pending", agentRef: "AGENT001" },
-    { id: "VD-3N8V4Q", date: "2025-01-18", time: "09:00", pickup: "St Pancras", drop: "Mayfair Hotel", vehicle: "First Class", status: "Confirmed", agentRef: "CORP202" },
-    { id: "VD-5B1C6X", date: "2025-01-20", time: "18:45", pickup: "City Airport", drop: "The Shard", vehicle: "Premium SUV", status: "Confirmed", agentRef: "AGENT001" },
-    { id: "VD-7J4R2D", date: "2025-01-22", time: "11:15", pickup: "Paddington Stn", drop: "Oxford Circus", vehicle: "Executive Sedan", status: "Pending", agentRef: "" },
+    { id: "VD-X7K2P9", date: "2025-01-15", time: "10:30", pickup: "Lokpriya Gopinath Bordoloi Airport", drop: "Vivanta Guwahati, GS Road", vehicle: "Executive Sedan", status: "Confirmed", agentRef: "TRAVELSPACE" },
+    { id: "VD-9H2L5M", date: "2025-01-16", time: "14:00", pickup: "Paltan Bazaar", drop: "Dispur Secretariat", vehicle: "Luxury MPV", status: "Pending", agentRef: "CORP202" },
+    { id: "VD-3N8V4Q", date: "2025-01-18", time: "09:00", pickup: "Radisson Blu", drop: "Kamakhya Temple", vehicle: "First Class", status: "Confirmed", agentRef: "AGENT001" },
+    { id: "VD-5B1C6X", date: "2025-01-20", time: "18:45", pickup: "Guwahati Railway Station", drop: "Khanapara", vehicle: "Premium SUV", status: "Confirmed", agentRef: "TRAVELSPACE" },
+    { id: "VD-7J4R2D", date: "2025-01-22", time: "11:15", pickup: "Shillong", drop: "Guwahati Airport (GAU)", vehicle: "Executive Sedan", status: "Pending", agentRef: "" },
 ];
 
 export function BookingsTable() {
     const [searchTerm, setSearchTerm] = useState("");
+    const [allBookings, setAllBookings] = useState(MOCK_BOOKINGS);
+
+    // Initial Load
+    useState(() => {
+        if (typeof window !== 'undefined') {
+            try {
+                const local = JSON.parse(localStorage.getItem("vd_bookings") || "[]");
+                if (local.length > 0) {
+                    setAllBookings(prev => [...local, ...prev]);
+                }
+            } catch (e) {
+                console.error("Failed to load local bookings", e);
+            }
+        }
+    });
 
     const filteredBookings = useMemo(() => {
-        return MOCK_BOOKINGS.filter(b =>
+        return allBookings.filter(b =>
             b.id.toLowerCase().includes(searchTerm.toLowerCase()) ||
             b.agentRef.toLowerCase().includes(searchTerm.toLowerCase()) ||
             b.pickup.toLowerCase().includes(searchTerm.toLowerCase())
         );
-    }, [searchTerm]);
+    }, [searchTerm, allBookings]);
 
     return (
         <div className="space-y-6">
